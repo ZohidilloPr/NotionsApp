@@ -1,0 +1,128 @@
+<!doctype html>
+{% load static %}
+{% load bootstrap5 %}
+{% load crispy_forms_tags %}
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <title>Home</title>
+  </head>
+  <body>
+    <nav class="navbar navbar-light bg-light">
+      <div class="container-fluid"> 
+        <span class="navbar-text">
+          <a href="{% url 'Home' %}" class="text-decoration-none text-secondary">
+            Welcome to Notions App
+          </a> 
+        </span>
+      </div>
+    </nav>
+    <!-- end nav -->
+    <div class="container">
+        <div class="row mt-4">
+          <div class="col-md-6 m-auto">
+            <form action="{% url 'Home' %}" class="uniForm" method="post">
+              {% csrf_token %}
+              <div class="input-group mb-3">
+                <button class="btn btn-outline-secondary" type="submit" id="button-addon1">+</button>
+                {{ form.aim }}
+              </div>
+              <div class="accordion" id="accordionExample">
+                <div class="accordion-item">
+                  <h2 class="accordion-header" id="headingTwo">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                      Advanced
+                    </button>
+                  </h2>
+                  <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
+                    <div class="accordion-body">
+                      <div class="form-floating">
+                        {{ form.about }}
+                        <label for="floatingTextarea2">Comments</label>
+                      </div> 
+                      <div class="form-check mt-2">
+                        {{ form.impt }}
+                        <label class="form-check-label" for="flexCheckDefault">
+                          Important
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              {% for i in notion %}
+                
+                <div class="accordion accordion-flush" id="accordionFlushExample">
+                  <div class="accordion-item">
+                    <h2 class="accordion-header" id="{{ i.about }}">
+                      {% if i.impt == True %}
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#{{ i.aim }}" aria-expanded="false" aria-controls="{{ i.aim }}">
+                          <span class="mx-3 text-danger">@Important</span>{{ i.aim }}                           
+                        </button>
+                      {% elif i.comp == True %}
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#{{ i.aim }}" aria-expanded="false" aria-controls="{{ i.aim }}">
+                          {% if i.impt == True %}
+                          <span class="mx-3 text-danger">@Important</span>
+                          <strike>{{ i.aim }}</strike>
+                          {% else %}
+                            <strike>{{ i.aim }}</strike>
+                          {% endif %}
+                        </button>
+                      {% else %} 
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#{{ i.aim }}" aria-expanded="false" aria-controls="{{ i.aim }}">
+                          {{ i.aim }}                        
+                        </button>
+                      {% endif %}  
+                    </h2>
+                    <div id="{{ i.aim }}" class="accordion-collapse collapse" aria-labelledby="{{ i.about }}" data-bs-parent="#accordionFlushExample">
+                      <div class="accordion-body">
+                        {% if i.about == '' %}
+                          <small> This isn't anything about Notion 🤷😢😢 </small>  
+                        {% else %}
+                          <small>{{ i.about }}</small>   
+                        {% endif %}
+                        <div class="bottom-section">
+                          <div class="data d-grid gap-2 d-md-flex justify-content-md-end">
+                            <small> {{ i.data }} </small>
+                          </div>
+                          <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <a href="{% url 'Update' task_id=i.id %}"><button class="btn btn-outline-info me-md-2 btn-sm" type="button">Update</button></a>
+                            <a href="{% url 'Delete' task_id=i.id %}"><button class="btn btn-danger btn-sm" type="button">Delete</button></a>
+                          </div>                     
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div> 
+                <hr class="m-0 p-0">
+              {% endfor %}
+            </form>
+          </div>
+        </div>  
+      </div>
+      
+      
+      
+
+
+
+
+
+
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+
+    <!-- Option 2: Separate Popper and Bootstrap JS -->
+    <!--
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
+    -->
+  </body>
+</html>
